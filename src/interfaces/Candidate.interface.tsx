@@ -4,8 +4,8 @@ export interface Candidate {
     name: string;
     username: string;
     location: string | null;
-    avatar: string;
+    avatar_url: string;
     email: string | null;
-    html_url: string;
+    bio: string;
     company: string | null
 }
