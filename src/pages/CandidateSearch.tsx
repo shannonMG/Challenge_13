@@ -20,9 +20,30 @@ const CandidateSearch = () => {
     fetchData(); // Fetch data when the component mounts
   }, [currentIndex]); // Run only once when the component mounts
 
-  const handleSave = () => {
-    console.log('Saved candidate:', candidates[currentIndex]); // Save the current candidate (log for now)
-    setCurrentIndex(currentIndex + 1); // Move to the next candidate
+  const handleSave = async () => {
+    if (candidate) {
+      const savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+      savedCandidates.push(candidate); // Add current candidate to the saved list
+      localStorage.setItem('savedCandidates', JSON.stringify(savedCandidates)); // Save to localStorage
+
+      // Move to the next candidate
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      if (nextIndex < candidates.length) {
+        const githubUser = await searchGithubUser(candidates[nextIndex].username);
+        setCandidate({
+          name: githubUser.name,
+          username: githubUser.login,
+          location: githubUser.location,
+          avatar_url: githubUser.avatar_url,
+          email: githubUser.email,
+          bio: githubUser.bio,
+          company: githubUser.company,
+        });
+      } else {
+        setCandidate(null); // No more candidates available
+      }
+    }
   };
 
   const handleSkip = () => {
