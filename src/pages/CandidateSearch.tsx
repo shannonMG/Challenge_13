@@ -41,7 +41,7 @@ const CandidateSearch = () => {
           company: githubUser.company,
         });
       } else {
-        setCandidate(null); // No more candidates available
+        setCandidate(undefined); // No more candidates available
       }
     }
   };
