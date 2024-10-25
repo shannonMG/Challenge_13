@@ -9,6 +9,12 @@ const SavedCandidates: React.FC = () => {
     setSavedCandidates(storedCandidates);
   }, []);
 
+  const handleRemove = (username: string) => {
+    const updatedCandidates = savedCandidates.filter(candidate => candidate.username !== username); // Filter out the candidate to be removed
+    setSavedCandidates(updatedCandidates); // Update the local state
+    localStorage.setItem('savedCandidates', JSON.stringify(updatedCandidates)); // Update local storage
+  };  
+
   return (
     <div className="saved-candidates-page">
       <h1>Saved Candidates</h1>
@@ -17,24 +23,28 @@ const SavedCandidates: React.FC = () => {
           <thead>
             <tr>
               <th>Image</th>
-              <th>Username</th>
+              <th>Name</th>
               <th>Location</th>
               <th>Email</th>
               <th>Company</th>
               <th>Bio</th>
+              <th>Remove</th> {/* New column for the remove button */}
             </tr>
           </thead>
           <tbody>
             {savedCandidates.map((candidate, index) => (
               <tr key={index}>
                 <td>
-                  <img src={candidate.avatar_url} alt={`${candidate.username}'s avatar`} />
+                  <img src={candidate.avatar_url} alt={`${candidate.name}'s avatar`} />
                 </td>
-                <td>{candidate.username}</td>
+                <td>{candidate.name}</td>
                 <td>{candidate.location || 'N/A'}</td>
                 <td><a href={`mailto:${candidate.email}`}>{candidate.email || 'N/A'}</a></td>
                 <td>{candidate.company || 'N/A'}</td>
                 <td>{candidate.bio || 'No bio available.'}</td>
+                <td>
+                  <button onClick={() => handleRemove(candidate.username)} className="remove-button">-</button> {/* Remove button */}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -45,5 +55,5 @@ const SavedCandidates: React.FC = () => {
     </div>
   );
 };
-
 export default SavedCandidates;
+
